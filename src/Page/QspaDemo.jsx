@@ -13,8 +13,12 @@ const QspaDemo = () => {
   useEffect(() => {
     if (started) {
       // Fetch questions securely from API
-      const apiKey = "z4sffYy1sZPABIg6hcJePY0x7R05xwWXJFxbPZiw";
-      fetch(`https://quizapi.io/api/v1/questions?apiKey=${apiKey}&limit=10`)
+
+      fetch(
+        `https://quizapi.io/api/v1/questions?apiKey=${
+          import.meta.env.VITE_API_KEY
+        }&limit=10`
+      )
         .then((res) => res.json())
         .then((data) => setQuestions(data.question, console.log(data)));
     }
