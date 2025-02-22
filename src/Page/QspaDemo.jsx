@@ -95,8 +95,8 @@ const QspaDemo = () => {
 
   return (
     <div className=" bg-blue-50">
-      <div className="flex justify-between mb-6 bg-amber-50 py-6 px-4 h-full sticky top-0">
-        <h1 className="xl:text-4xl font-bold">Programming Exam</h1>
+      <div className="flex justify-between items-center mb-6 bg-amber-50 py-6 px-4 h-full sticky top-0">
+        <h1 className="text-sm xl:text-4xl font-bold">Programming Exam</h1>
         {!submitted && (
           <div className="hidden text-xl md:flex justify-between align-middle gap-4">
             {currentQuestionIndex + 1}/{questions.length}
@@ -143,10 +143,12 @@ const QspaDemo = () => {
           </button>
         </div>
       ) : questions.length > 0 ? (
-        <div className="py-6 min-h-[700px]">
-          <div className="p-4 min-h-[500px]">
-            <h2 className="text-2xl ">Question {currentQuestionIndex + 1}</h2>
-            <p className="my-6 text-xl">
+        <div className="py-2 md:py-6 min-h-[500px] md:min-h-[700px]">
+          <div className="p-4 md:min-h-[500px]">
+            <h2 className="text-xl md:text-2xl ">
+              Question {currentQuestionIndex + 1}
+            </h2>
+            <p className="my-4 md:my-6 md:text-xl">
               {questions[currentQuestionIndex]?.question}
             </p>
             {questions[currentQuestionIndex]?.answers &&
@@ -156,7 +158,7 @@ const QspaDemo = () => {
                     <button
                       key={key}
                       onClick={() => handleAnswerSelect(key)}
-                      className={`block p-2 my-4 rounded w-full text-left ${
+                      className={`block p-2 my-4 rounded w-full text-left text-xs md:text-base ${
                         answers[currentQuestionIndex] === key
                           ? "bg-green-300"
                           : "bg-blue-100"
