@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdNavigateNext } from "react-icons/md";
 import { BsStopwatchFill } from "react-icons/bs";
+
 const QspaDemo = () => {
   const [username, setUsername] = useState("");
   const [examCode, setExamCode] = useState("");
@@ -23,7 +24,7 @@ const QspaDemo = () => {
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
             setQuestions(data);
-            console.log("Questions loaded:", data);
+            // console.log("Questions loaded:", data);
           } else {
             alert("Failed to load questions. Please try again later.");
           }
@@ -74,18 +75,17 @@ const QspaDemo = () => {
           placeholder="Enter Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 mb-2 rounded"
+          className="border p-2 mb-2 rounded w-3/4 sm:w-2/3 md:w-1/3"
         />
         <input
           placeholder="Enter Exam Code"
           value={examCode}
           onChange={(e) => setExamCode(e.target.value)}
-          className="border p-2 mb-2 rounded"
+          className="border p-2 mb-2 rounded w-3/4 sm:w-2/3 md:w-1/3"
         />
         <button
           onClick={handleStart}
-          className="bg-green-500
-           text-white p-2 rounded my-6"
+          className="bg-green-500 text-white p-2 rounded w-3/4 sm:w-2/3 md:w-1/3 my-6"
         >
           Start Exam
         </button>
@@ -96,9 +96,9 @@ const QspaDemo = () => {
   return (
     <div className=" bg-blue-50">
       <div className="flex justify-between mb-6 bg-amber-50 py-6 px-4">
-        <h1 className="text-4xl font-bold">Programming Exam</h1>
+        <h1 className="xl:text-4xl font-bold">Programming Exam</h1>
         {!submitted && (
-          <div className="text-xl flex justify-between align-middle gap-4">
+          <div className="hidden text-xl md:flex justify-between align-middle gap-4">
             {currentQuestionIndex + 1}/{questions.length}
           </div>
         )}
@@ -106,15 +106,31 @@ const QspaDemo = () => {
         <div
           className={`${
             timeLeft === -1 ? "hidden" : ""
-          } text-2xl flex justify-between align-middle gap-4`}
+          } xl:text-2xl flex justify-between align-middle gap-4`}
         >
-          <BsStopwatchFill />
+          <BsStopwatchFill className="hidden md:block" />
           {timeLeft > 0
             ? `Time Left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60}`
             : "Time's up!"}
         </div>
       </div>
-
+      {!submitted && (
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 p-4">
+          {questions.map((_, index) => (
+            <button
+              key={index}
+              className={`p-2 rounded text-white ${
+                answers[index] ? "bg-green-500" : "bg-gray-500"
+              } ${
+                currentQuestionIndex === index ? "ring-4 ring-emerald-200" : ""
+              }`}
+              onClick={() => setCurrentQuestionIndex(index)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      )}
       {submitted ? (
         <div className=" p-4">
           <h2>Exam Completed</h2>
@@ -140,7 +156,7 @@ const QspaDemo = () => {
                     <button
                       key={key}
                       onClick={() => handleAnswerSelect(key)}
-                      className={`block p-2 my-4 rounded ${
+                      className={`block p-2 my-4 rounded w-full text-left ${
                         answers[currentQuestionIndex] === key
                           ? "bg-green-300"
                           : "bg-blue-100"
@@ -152,33 +168,41 @@ const QspaDemo = () => {
               )}
           </div>
 
-          <div className="flex justify-items-start gap-6 p-4">
+          <div className="flex justify-center md:justify-start gap-6 p-4">
             <button
               disabled={currentQuestionIndex === 0}
               onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-              className={`bg-blue-500 text-white p-2 rounded w-[82px] ${
+              className={`bg-blue-500 text-white p-2 rounded w-20 ${
                 currentQuestionIndex === 0 ? "bg-gray-500 disabled" : ""
-              } w-[82px]`}
+              }`}
             >
               <MdNavigateNext className="text-3xl rotate-180 mx-auto" />
             </button>
             <button
               disabled={currentQuestionIndex === questions.length - 1}
               onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
-              className={`bg-blue-500 text-white p-2 rounded w-[82px] ${
+              className={`bg-blue-500 text-white p-2 rounded w-20 ${
                 currentQuestionIndex === questions.length - 1
                   ? "bg-gray-500 disabled"
                   : ""
-              } w-[82px]`}
+              }`}
             >
               <MdNavigateNext className="text-3xl mx-auto" />
             </button>
           </div>
-
+          <button
+            onClick={() => {
+              if (!window.confirm("Are you sure you want to Quit?")) return;
+              window.location.reload();
+            }}
+            className="text-[#b8191994] p-2 mt-4 rounded ml-4 w-20 flex justify-between align-middle text-center"
+          >
+            Quit
+          </button>
           {currentQuestionIndex === questions.length - 1 && (
             <button
               onClick={handleSubmit}
-              className="bg-green-500 text-white p-2 mt-4 rounded ml-4 w-[82px] "
+              className="bg-green-500 text-white p-2 mt-4 rounded ml-4 w-20"
             >
               Submit
             </button>
