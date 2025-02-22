@@ -211,7 +211,7 @@ const QspaDemo = () => {
           </div>
         </div>
       ) : (
-        <p className="pb-4">Loading questions...</p>
+        <p className="p-4">Loading questions...</p>
       )}
     </div>
   );
