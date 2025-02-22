@@ -190,26 +190,28 @@ const QspaDemo = () => {
               <MdNavigateNext className="text-3xl mx-auto" />
             </button>
           </div>
-          <button
-            onClick={() => {
-              if (!window.confirm("Are you sure you want to Quit?")) return;
-              window.location.reload();
-            }}
-            className="text-[#b8191994] p-2 mt-4 rounded ml-4 w-20 flex justify-between align-middle text-center"
-          >
-            Quit
-          </button>
-          {currentQuestionIndex === questions.length - 1 && (
+          <div className="flex justify-center md:justify-start gap-6 p-4">
             <button
-              onClick={handleSubmit}
-              className="bg-green-500 text-white p-2 mt-4 rounded ml-4 w-20"
+              onClick={() => {
+                if (!window.confirm("Are you sure you want to Quit?")) return;
+                window.location.reload();
+              }}
+              className="text-[#b8191994] p-2 mt-4 rounded w-20"
             >
-              Submit
+              Quit
             </button>
-          )}
+            {currentQuestionIndex === questions.length - 1 && (
+              <button
+                onClick={handleSubmit}
+                className="bg-green-500 text-white p-2 mt-4 rounded w-20"
+              >
+                Submit
+              </button>
+            )}
+          </div>
         </div>
       ) : (
-        <p>Loading questions...</p>
+        <p className="pb-4">Loading questions...</p>
       )}
     </div>
   );
