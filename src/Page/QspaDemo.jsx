@@ -116,8 +116,10 @@ const QspaDemo = () => {
           <BsStopwatchFill className="hidden md:block" />
           {timeLeft > 0
             ? questions.length === 0
-              ? "Time Left: 00:00"
-              : `Time Left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60}`
+              ? "Time Left: --:--"
+              : `Time Left: ${Math.floor(timeLeft / 60)}:${String(
+                  timeLeft % 60
+                ).padStart(2, "0")}`
             : "Time's up!"}
         </div>
       </div>
