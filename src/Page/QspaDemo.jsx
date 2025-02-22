@@ -205,7 +205,7 @@ const QspaDemo = () => {
             {currentQuestionIndex === questions.length - 1 && (
               <button
                 onClick={handleSubmit}
-                className="bg-green-500 text-white p-2 mt-4 rounded w-20"
+                className=" text-green-500 p-2 mt-4 rounded w-20"
               >
                 Submit
               </button>
