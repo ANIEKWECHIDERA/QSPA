@@ -10,6 +10,7 @@ const QspaDemo = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(5 * 60);
+  const [ShowTimer, setShowTimer] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -65,7 +66,7 @@ const QspaDemo = () => {
       }
     });
     setScore(totalScore);
-    setTimeLeft(-1);
+    setShowTimer(false);
   };
 
   if (!started) {
@@ -98,19 +99,25 @@ const QspaDemo = () => {
       <div className="flex justify-between items-center mb-6 bg-amber-50 py-6 px-4 h-full sticky top-0">
         <h1 className="text-sm xl:text-4xl font-bold">Programming Exam</h1>
         {!submitted && (
-          <div className="hidden text-xl md:flex justify-between align-middle gap-4">
+          <div
+            className={`hidden ${
+              questions.length === 0 ? "md:hidden" : ""
+            } text-xl md:flex justify-between align-middle gap-4`}
+          >
             {currentQuestionIndex + 1}/{questions.length}
           </div>
         )}
 
         <div
           className={`${
-            timeLeft === -1 ? "hidden" : ""
+            ShowTimer === false ? "hidden" : ""
           } xl:text-2xl flex justify-between align-middle gap-4`}
         >
           <BsStopwatchFill className="hidden md:block" />
           {timeLeft > 0
-            ? `Time Left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60}`
+            ? questions.length === 0
+              ? "Time Left: 00:00"
+              : `Time Left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60}`
             : "Time's up!"}
         </div>
       </div>
