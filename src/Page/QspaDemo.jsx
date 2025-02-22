@@ -39,14 +39,16 @@ const QspaDemo = () => {
       const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
     } else if (timeLeft === 0) {
-      handleSubmit();
+      handleTimeOut();
     }
   }, [timeLeft, started]);
 
   const handleStart = () => {
-    if (username && examCode) {
-      setStarted(true);
+    if (!username.trim || !examCode.trim()) {
+      alert("Please enter a valid username and exam code.");
+      return;
     }
+    setStarted(true);
   };
 
   const handleAnswerSelect = (optionKey) => {
@@ -62,16 +64,31 @@ const QspaDemo = () => {
         selectedAnswer &&
         question.correct_answers[`${selectedAnswer}_correct`] === "true"
       ) {
-        totalScore += 5;
+        totalScore += 10;
       }
     });
     setScore(totalScore);
     setShowTimer(false);
   };
 
+  const handleTimeOut = () => {
+    setSubmitted(true);
+    let totalScore = 0;
+    questions.forEach((question, index) => {
+      const selectedAnswer = answers[index];
+      if (
+        selectedAnswer &&
+        question.correct_answers[`${selectedAnswer}_correct`] === "true"
+      ) {
+        totalScore += 10;
+      }
+    });
+    setScore(totalScore);
+  };
+
   if (!started) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="bg-blue-50 flex flex-col items-center justify-center h-screen">
         <input
           placeholder="Enter Username"
           value={username}
