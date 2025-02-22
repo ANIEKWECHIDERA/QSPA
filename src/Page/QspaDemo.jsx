@@ -95,7 +95,7 @@ const QspaDemo = () => {
 
   return (
     <div className=" bg-blue-50">
-      <div className="flex justify-between mb-6 bg-amber-50 py-6 px-4">
+      <div className="flex justify-between mb-6 bg-amber-50 py-6 px-4 h-full sticky top-0">
         <h1 className="xl:text-4xl font-bold">Programming Exam</h1>
         {!submitted && (
           <div className="hidden text-xl md:flex justify-between align-middle gap-4">
