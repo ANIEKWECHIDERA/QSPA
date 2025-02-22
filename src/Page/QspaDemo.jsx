@@ -9,7 +9,7 @@ const QspaDemo = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(1 * 60);
+  const [timeLeft, setTimeLeft] = useState(5 * 60);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
