@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { MdNavigateNext } from "react-icons/md";
+import { BsStopwatchFill } from "react-icons/bs";
 const QspaDemo = () => {
   const [username, setUsername] = useState("");
   const [examCode, setExamCode] = useState("");
@@ -7,8 +8,9 @@ const QspaDemo = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(10 * 60);
+  const [timeLeft, setTimeLeft] = useState(1 * 60);
   const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     if (started) {
@@ -21,6 +23,7 @@ const QspaDemo = () => {
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
             setQuestions(data);
+            console.log("Questions loaded:", data);
           } else {
             alert("Failed to load questions. Please try again later.");
           }
@@ -44,19 +47,24 @@ const QspaDemo = () => {
     }
   };
 
-  const handleAnswerSelect = (option) => {
-    setAnswers({ ...answers, [currentQuestionIndex]: option });
+  const handleAnswerSelect = (optionKey) => {
+    setAnswers({ ...answers, [currentQuestionIndex]: optionKey });
   };
 
   const handleSubmit = () => {
     setSubmitted(true);
-    fetch("https://your-secure-backend.com/api/submit-answers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, examCode, answers }),
-    })
-      .then((res) => res.json())
-      .then((data) => alert(`Your score: ${data.score}`));
+    let totalScore = 0;
+    questions.forEach((question, index) => {
+      const selectedAnswer = answers[index];
+      if (
+        selectedAnswer &&
+        question.correct_answers[`${selectedAnswer}_correct`] === "true"
+      ) {
+        totalScore += 5;
+      }
+    });
+    setScore(totalScore);
+    setTimeLeft(-1);
   };
 
   if (!started) {
@@ -76,7 +84,8 @@ const QspaDemo = () => {
         />
         <button
           onClick={handleStart}
-          className="bg-blue-500 text-white p-2 rounded my-6"
+          className="bg-green-500
+           text-white p-2 rounded my-6"
         >
           Start Exam
         </button>
@@ -87,15 +96,29 @@ const QspaDemo = () => {
   return (
     <div className=" bg-blue-50">
       <div className="flex justify-between mb-6 bg-amber-50 py-6 px-4">
-        <h1>Exam</h1>
-        <div>
-          Time Left: {Math.floor(timeLeft / 60)}:{timeLeft % 60}
+        <h1 className="text-4xl font-bold">Programming Exam</h1>
+        {!submitted && (
+          <div className="text-xl flex justify-between align-middle gap-4">
+            {currentQuestionIndex + 1}/{questions.length}
+          </div>
+        )}
+
+        <div
+          className={`${
+            timeLeft === -1 ? "hidden" : ""
+          } text-2xl flex justify-between align-middle gap-4`}
+        >
+          <BsStopwatchFill />
+          {timeLeft > 0
+            ? `Time Left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60}`
+            : "Time's up!"}
         </div>
       </div>
 
       {submitted ? (
         <div className=" p-4">
           <h2>Exam Completed</h2>
+          <p>Your Score: {score}</p>
           <button
             onClick={() => window.location.reload()}
             className="bg-green-500 text-white p-2 rounded my-6"
@@ -104,46 +127,58 @@ const QspaDemo = () => {
           </button>
         </div>
       ) : questions.length > 0 ? (
-        <div>
-          <div className="p-4">
-            <h2>Question {currentQuestionIndex + 1}</h2>
-            <p className="my-6">{questions[currentQuestionIndex]?.question}</p>
+        <div className="py-6 min-h-[700px]">
+          <div className="p-4 min-h-[500px]">
+            <h2 className="text-2xl ">Question {currentQuestionIndex + 1}</h2>
+            <p className="my-6 text-xl">
+              {questions[currentQuestionIndex]?.question}
+            </p>
             {questions[currentQuestionIndex]?.answers &&
-              Object.values(questions[currentQuestionIndex].answers).map(
-                (option, index) =>
+              Object.entries(questions[currentQuestionIndex].answers).map(
+                ([key, option]) =>
                   option && (
                     <button
-                      key={index}
-                      onClick={() => handleAnswerSelect(option)}
-                      className="block p-2 my-4 rounded bg-blue-100"
+                      key={key}
+                      onClick={() => handleAnswerSelect(key)}
+                      className={`block p-2 my-4 rounded ${
+                        answers[currentQuestionIndex] === key
+                          ? "bg-green-300"
+                          : "bg-blue-100"
+                      }`}
                     >
-                      ({index + 1}) {option}
+                      ({key.slice(7)}) {option}
                     </button>
                   )
               )}
           </div>
 
-          <div className="flex justify-between p-4">
+          <div className="flex justify-items-start gap-6 p-4">
             <button
               disabled={currentQuestionIndex === 0}
               onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-              className="bg-gray-500 text-white p-2 rounded w-[82px]"
+              className={`bg-blue-500 text-white p-2 rounded w-[82px] ${
+                currentQuestionIndex === 0 ? "bg-gray-500 disabled" : ""
+              } w-[82px]`}
             >
-              Previous
+              <MdNavigateNext className="text-3xl rotate-180 mx-auto" />
             </button>
             <button
               disabled={currentQuestionIndex === questions.length - 1}
               onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
-              className="bg-blue-500 text-white p-2 rounded w-[82px]"
+              className={`bg-blue-500 text-white p-2 rounded w-[82px] ${
+                currentQuestionIndex === questions.length - 1
+                  ? "bg-gray-500 disabled"
+                  : ""
+              } w-[82px]`}
             >
-              Next
+              <MdNavigateNext className="text-3xl mx-auto" />
             </button>
           </div>
 
           {currentQuestionIndex === questions.length - 1 && (
             <button
               onClick={handleSubmit}
-              className="bg-red-500 text-white p-2 mt-4 rounded ml-4 w-[82px]"
+              className="bg-green-500 text-white p-2 mt-4 rounded ml-4 w-[82px] "
             >
               Submit
             </button>
